@@ -85,6 +85,7 @@ export const Checkbox: FC<Props> = ({
                   setChecked(newChecked);
                   setSubmissionValue(newChecked, pageName, name, setSubmission);
                 }}
+                required={required}
               />
             </div>
             <div className="ml-3 text-base">

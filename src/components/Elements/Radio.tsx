@@ -90,6 +90,7 @@ export const Radio: FC<Props> = ({
                       setSubmission
                     )
                   }
+                  required={required}
                 />
                 <label
                   htmlFor={id}
