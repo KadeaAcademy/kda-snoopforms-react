@@ -1,7 +1,7 @@
 import React, { FC, useContext, useEffect, useState } from 'react';
 import useDefaultValue from '../../hooks/useDefaultValue';
 import { setSubmissionValue } from '../../lib/elements';
-import { ClassNames } from '../../types';
+import { ClassNames, ElementErrorType } from '../../types';
 import { SubmissionContext } from '../SnoopForm/SnoopForm';
 import { PageContext } from '../SnoopPage/SnoopPage';
 
@@ -13,6 +13,7 @@ interface Option {
 interface Props {
   name: string;
   label?: string;
+  error?: ElementErrorType | false;
   help?: string;
   options: (Option | string)[];
   placeholder?: string;
@@ -29,6 +30,7 @@ export const Checkbox: FC<Props> = ({
   classNames,
   defaultValue,
   required,
+  error,
 }) => {
   const [checked, setChecked] = useState<string[]>([]);
   const { setSubmission }: any = useContext(SubmissionContext);
@@ -66,7 +68,9 @@ export const Checkbox: FC<Props> = ({
                   type="checkbox"
                   className={
                     classNames.element ||
-                    'focus:ring-slate-500 h-4 w-4 text-slate-600 border-gray-300 rounded-sm'
+                    `focus:ring-slate-500 h-4 w-4 text-slate-600 border-${
+                      error ? 'red' : 'gray'
+                    }-300 rounded-sm`
                   }
                   defaultChecked={defaultValue?.includes(
                     typeof option === 'object' ? option.label : option
@@ -91,7 +95,6 @@ export const Checkbox: FC<Props> = ({
                       setSubmission
                     );
                   }}
-                  // required={required}
                 />
               </div>
               <div className="ml-3 text-base">

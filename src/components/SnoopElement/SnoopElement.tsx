@@ -1,6 +1,6 @@
 import React, { FC, useContext, useEffect } from 'react';
 import { getOptionsSchema } from '../../lib/elements';
-import { ClassNames } from '../../types';
+import { ClassNames, ElementErrorType } from '../../types';
 import { ButtonLink } from '../Elements/ButtonLink';
 import { Cards } from '../Elements/Cards';
 import { Checkbox } from '../Elements/Checkbox';
@@ -35,6 +35,7 @@ export interface SnoopElementProps {
   rows?: number;
   defaultValue?: string | string[];
   autoSubmit?: boolean;
+  error?: ElementErrorType | false;
 }
 
 export const SnoopElement: FC<SnoopElementProps> = ({
@@ -52,6 +53,7 @@ export const SnoopElement: FC<SnoopElementProps> = ({
   cols,
   rows,
   autoSubmit = false,
+  error,
 }) => {
   const { schema, setSchema } = useContext(SchemaContext);
   const pageName = useContext(PageContext);
@@ -116,6 +118,7 @@ export const SnoopElement: FC<SnoopElementProps> = ({
                 typeof defaultValue === 'string' ? [] : defaultValue
               }
               required={required}
+              error={error}
               options={options || []}
             />
           ) : type === 'email' ? (
@@ -127,6 +130,7 @@ export const SnoopElement: FC<SnoopElementProps> = ({
               placeholder={placeholder}
               classNames={classNames}
               required={required}
+              error={error}
               defaultValue={
                 typeof defaultValue === 'string' ? defaultValue : ''
               }
@@ -140,6 +144,7 @@ export const SnoopElement: FC<SnoopElementProps> = ({
               placeholder={placeholder}
               classNames={classNames}
               required={required}
+              error={error}
               defaultValue={
                 typeof defaultValue === 'string' ? defaultValue : ''
               }
@@ -153,6 +158,7 @@ export const SnoopElement: FC<SnoopElementProps> = ({
               placeholder={placeholder}
               classNames={classNames}
               required={required}
+              error={error}
               defaultValue={
                 typeof defaultValue === 'string' ? defaultValue : ''
               }
@@ -164,6 +170,7 @@ export const SnoopElement: FC<SnoopElementProps> = ({
               help={help}
               classNames={classNames}
               required={required}
+              error={error}
               options={options || []}
               defaultValue={
                 typeof defaultValue === 'string' ? defaultValue : ''
@@ -185,6 +192,7 @@ export const SnoopElement: FC<SnoopElementProps> = ({
               placeholder={placeholder}
               classNames={classNames}
               required={required}
+              error={error}
             />
           ) : type === 'textarea' ? (
             <Textarea
@@ -195,6 +203,7 @@ export const SnoopElement: FC<SnoopElementProps> = ({
               placeholder={placeholder}
               classNames={classNames}
               required={required}
+              error={error}
               defaultValue={
                 typeof defaultValue === 'string' ? defaultValue : ''
               }
@@ -208,11 +217,19 @@ export const SnoopElement: FC<SnoopElementProps> = ({
               placeholder={placeholder}
               classNames={classNames}
               required={required}
+              error={error}
               defaultValue={
                 typeof defaultValue === 'string' ? defaultValue : ''
               }
             />
           ) : null}
+          {typeof error === 'boolean' ? (
+            <></>
+          ) : (
+            <p className={classNames.help || 'mt-2 text-sm text-red-500'}>
+              {error?.message}
+            </p>
+          )}
           {!['submit', 'button-link'].includes(type) ? (
             <>
               <br />
@@ -221,6 +238,7 @@ export const SnoopElement: FC<SnoopElementProps> = ({
           ) : (
             <></>
           )}
+          <hr />
         </div>
       )}
     </div>

@@ -18,9 +18,14 @@ export interface TextFieldProps {
   required: boolean;
   defaultValue?: string | number;
   rows?: number;
+  error?: ElementErrorType | false;
 }
 
 export interface Option {
   label: string;
   value: string;
 }
+
+export type ElementErrorType = {
+  message: string;
+};

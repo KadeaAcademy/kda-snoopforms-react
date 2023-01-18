@@ -38,6 +38,8 @@ export interface Props {
   localOnly?: boolean;
   className?: string;
   onSubmit?: (obj: onSubmitProps) => void;
+  setFieldErrors?: any;
+  page?: any;
   children?: ReactNode;
 }
 
@@ -48,6 +50,8 @@ export const SnoopForm: FC<Props> = ({
   localOnly = false,
   className = '',
   onSubmit = (): any => {},
+  setFieldErrors,
+  page,
   children,
 }) => {
   const [schema, setSchema] = useState<any>({ pages: [] });
@@ -56,7 +60,18 @@ export const SnoopForm: FC<Props> = ({
   const [submissionSessionId, setSubmissionSessionId] = useState('');
 
   const handleSubmit = async (pageName: string) => {
+    const pageErrors: any = {};
+    page.blocks
+      .filter((b: any) => /Question/.test(b.type))
+      .map((q: any) => {
+        const e = submission[page.id][q.id].length;
+        pageErrors[q.id] =
+          q.data.required && e ? false : { message: 'Ce champs est requis' };
+      });
 
+    setFieldErrors(pageErrors);
+
+    if (Object.values(pageErrors).filter(f => f).length) return;
     let _submissionSessionId = submissionSessionId;
     if (!localOnly) {
       // create answer session if it don't exist
