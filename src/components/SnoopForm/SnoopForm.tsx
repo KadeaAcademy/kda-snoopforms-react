@@ -65,8 +65,11 @@ export const SnoopForm: FC<Props> = ({
       .filter((b: any) => /Question/.test(b.type))
       .map((q: any) => {
         const e = submission[page.id][q.id].length;
-        pageErrors[q.id] =
-          q.data.required && e ? false : { message: 'Ce champs est requis' };
+        pageErrors[q.id] = q.data.required
+          ? e
+            ? false
+            : { message: 'Ce champs est requis' }
+          : false;
       });
 
     setFieldErrors(pageErrors);
