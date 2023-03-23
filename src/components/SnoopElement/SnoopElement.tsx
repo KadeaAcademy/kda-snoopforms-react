@@ -12,6 +12,9 @@ import { Submit } from '../Elements/Submit';
 import { Text } from '../Elements/Text';
 import { Textarea } from '../Elements/Textarea';
 import { Website } from '../Elements/Website';
+import { DateTime } from '../Elements/DateTime';
+import { Select } from '../Elements/Select';
+import { Password } from '../Elements/Password';
 import { CurrentPageContext, SchemaContext } from '../SnoopForm/SnoopForm';
 import { PageContext } from '../SnoopPage/SnoopPage';
 
@@ -31,6 +34,7 @@ export interface SnoopElementProps {
   classNames?: ClassNames;
   required?: boolean;
   options?: Option[] | string[];
+  optionsSelect?:{};
   cols?: number;
   rows?: number;
   defaultValue?: string | string[];
@@ -48,6 +52,7 @@ export const SnoopElement: FC<SnoopElementProps> = ({
   classNames = {},
   required = false,
   options,
+  optionsSelect,
   defaultValue,
   cols,
   rows,
@@ -169,12 +174,50 @@ export const SnoopElement: FC<SnoopElementProps> = ({
                 typeof defaultValue === 'string' ? defaultValue : ''
               }
             />
+          ) : type === 'select' ? (
+            <Select
+              name={name}
+              label={label}
+              help={help}
+              classNames={classNames}
+              required={required}
+              options={optionsSelect || {}}
+              defaultValue={
+                typeof defaultValue === 'string' ? defaultValue : ''
+              }
+            />
+          ) : type === 'date' ? (
+            <DateTime
+              name={name}
+              label={label}
+              defaultValue={
+                typeof defaultValue === 'string' ? defaultValue : ''
+              }
+              help={help}
+              Icon={icon}
+              placeholder={placeholder}
+              classNames={classNames}
+              required={required}
+            />
           ) : type === 'submit' ? (
             <Submit label={label} classNames={classNames} />
           ) : type === 'button-link' ? (
             <ButtonLink linkTo={link} label={label} classNames={classNames} />
           ) : type === 'text' ? (
             <Text
+              name={name}
+              label={label}
+              defaultValue={
+                typeof defaultValue === 'string' ? defaultValue : ''
+              }
+              help={help}
+              Icon={icon}
+              placeholder={placeholder}
+              classNames={classNames}
+              required={required}
+            />
+          ) : type === 'password' ? (
+            <Password
               name={name}
               label={label}
               defaultValue={
@@ -213,14 +256,7 @@ export const SnoopElement: FC<SnoopElementProps> = ({
               }
             />
           ) : null}
-          {!['submit', 'button-link'].includes(type) ? (
-            <>
-              <br />
-              <hr />
-            </>
-          ) : (
-            <></>
-          )}
+          
         </div>
       )}
     </div>
