@@ -18,6 +18,9 @@ export interface TextFieldProps {
   required: boolean;
   defaultValue?: string | number;
   rows?: number;
+  accept?: string;
+  ref?: () => void;
+  
 }
 
 export interface Option {

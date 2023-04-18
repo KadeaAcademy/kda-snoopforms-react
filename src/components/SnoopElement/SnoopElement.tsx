@@ -15,6 +15,7 @@ import { Website } from '../Elements/Website';
 import { DateTime } from '../Elements/DateTime';
 import { Select } from '../Elements/Select';
 import { Password } from '../Elements/Password';
+import { File } from '../Elements/File';
 import { CurrentPageContext, SchemaContext } from '../SnoopForm/SnoopForm';
 import { PageContext } from '../SnoopPage/SnoopPage';
 
@@ -39,6 +40,8 @@ export interface SnoopElementProps {
   rows?: number;
   defaultValue?: string | string[];
   autoSubmit?: boolean;
+  accept?: string;
+  refFile?: {[key: string]: any};
 }
 
 export const SnoopElement: FC<SnoopElementProps> = ({
@@ -57,6 +60,8 @@ export const SnoopElement: FC<SnoopElementProps> = ({
   cols,
   rows,
   autoSubmit = false,
+  accept,
+  refFile
 }) => {
   const { schema, setSchema } = useContext(SchemaContext);
   const pageName = useContext(PageContext);
@@ -198,6 +203,17 @@ export const SnoopElement: FC<SnoopElementProps> = ({
               placeholder={placeholder}
               classNames={classNames}
               required={required}
+            />
+          ) : type === 'file' ? (
+            <File
+              name={name}
+              label={label}
+              help={help}
+              accept={accept}
+              Icon={icon}
+              classNames={classNames}
+              required={required}
+              ref={refFile}
             />
           ) : type === 'submit' ? (
             <Submit label={label} classNames={classNames} />
