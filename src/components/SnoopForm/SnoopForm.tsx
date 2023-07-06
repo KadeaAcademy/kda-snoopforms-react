@@ -22,6 +22,11 @@ export const CurrentPageContext = createContext({
   },
 });
 
+// export const SubmitButtonContext = createContext({
+//   disabled: false,
+//   setDisabled: (value: boolean) => !value,
+// });
+
 export const SubmitHandlerContext = createContext((pageName: string) => {
   console.log(pageName);
 });
@@ -29,6 +34,7 @@ export const SubmitHandlerContext = createContext((pageName: string) => {
 interface onSubmitProps {
   submission: any;
   schema: any;
+  // disabled: boolean;
 }
 
 export interface Props {
@@ -39,6 +45,8 @@ export interface Props {
   className?: string;
   onSubmit?: (obj: onSubmitProps) => void;
   children?: ReactNode;
+  setError?: (value: boolean) => void;
+  setDisabled?: (value: boolean) => void;
 }
 
 export const SnoopForm: FC<Props> = ({
@@ -49,15 +57,20 @@ export const SnoopForm: FC<Props> = ({
   className = '',
   onSubmit = (): any => {},
   children,
+  setDisabled,
+  setError,
 }) => {
   const [schema, setSchema] = useState<any>({ pages: [] });
   const [submission, setSubmission] = useState<any>({});
+  // const [isDisabled, setIsDisabled] = useState<boolean>(false);
   const [currentPageIdx, setCurrentPageIdx] = useState(0);
   const [submissionSessionId, setSubmissionSessionId] = useState('');
 
-  const handleSubmit = async (pageName: string) => {
+  // let error: boolean = false;
 
+  const handleSubmit = async (pageName: string) => {
     let _submissionSessionId = submissionSessionId;
+    setDisabled?.(true);
     if (!localOnly) {
       // create answer session if it don't exist
       try {
@@ -69,7 +82,6 @@ export const SnoopForm: FC<Props> = ({
         }
         if (!_submissionSessionId) {
           // create new submissionSession in snoopHub
-
           const submissionSessionRes: any = await fetch(
             `${protocol}://${domain}/api/forms/${formId}/submissionSessions`,
             {
@@ -82,8 +94,9 @@ export const SnoopForm: FC<Props> = ({
           _submissionSessionId = submissionSession.id;
           setSubmissionSessionId(_submissionSessionId);
         }
+
         // send answer to snoop platform
-        await fetch(`${protocol}://${domain}/api/forms/${formId}/event`, {
+        await fetch(`${protocol}://${domain}/api/forms/${formId}/eddvent`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -101,10 +114,16 @@ export const SnoopForm: FC<Props> = ({
               { type: 'updateSchema', data: schema },
             ],
           }),
+        }).then((response) => {
+          if (!response.ok) {
+            setDisabled?.(false);
+            throw new Error(`${response.status}`);
+          }
         });
       } catch (e) {
+        setError?.(true);
         console.error(
-          `🦝 SnoopForms: Unable to send submission to snoopHub. Error: ${e}`
+          `🦝 SnoopForms: Unable to send submission to snoopHub. ${e}`
         );
       }
     }

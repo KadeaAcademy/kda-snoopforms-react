@@ -5,9 +5,10 @@ import { ClassNames } from '../../types';
 interface Props {
   label?: string;
   classNames?: ClassNames;
+  isDisabled?: boolean;
 }
 
-export const Submit: FC<Props> = ({ classNames, label }) => {
+export const Submit: FC<Props> = ({ classNames, label, isDisabled }) => {
   return (
     <button
       type="submit"
@@ -15,6 +16,7 @@ export const Submit: FC<Props> = ({ classNames, label }) => {
         classNames?.button ||
           'inline-flex items-center px-3 py-2 text-sm font-medium leading-4 text-white border border-transparent rounded-md shadow-sm bg-slate-600 hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500'
       )}
+      disabled={isDisabled}
     >
       {label || 'Submit'}
     </button>

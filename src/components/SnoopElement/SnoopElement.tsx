@@ -35,6 +35,7 @@ export interface SnoopElementProps {
   rows?: number;
   defaultValue?: string | string[];
   autoSubmit?: boolean;
+  isDisabled?: boolean;
 }
 
 export const SnoopElement: FC<SnoopElementProps> = ({
@@ -52,6 +53,7 @@ export const SnoopElement: FC<SnoopElementProps> = ({
   cols,
   rows,
   autoSubmit = false,
+  isDisabled= false,
 }) => {
   const { schema, setSchema } = useContext(SchemaContext);
   const pageName = useContext(PageContext);
@@ -82,9 +84,8 @@ export const SnoopElement: FC<SnoopElementProps> = ({
       newSchema.pages[pageIdx].elements[elementIdx].label = label;
       newSchema.pages[pageIdx].elements[elementIdx].help = help;
       if (['checkbox', 'radio'].includes(type)) {
-        newSchema.pages[pageIdx].elements[
-          elementIdx
-        ].options = getOptionsSchema(options);
+        newSchema.pages[pageIdx].elements[elementIdx].options =
+          getOptionsSchema(options);
       }
       return newSchema;
     });
@@ -170,7 +171,11 @@ export const SnoopElement: FC<SnoopElementProps> = ({
               }
             />
           ) : type === 'submit' ? (
-            <Submit label={label} classNames={classNames} />
+            <Submit
+              label={label}
+              classNames={classNames}
+              isDisabled={isDisabled}
+            />
           ) : type === 'button-link' ? (
             <ButtonLink linkTo={link} label={label} classNames={classNames} />
           ) : type === 'text' ? (
