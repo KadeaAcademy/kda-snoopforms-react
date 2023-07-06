@@ -122,7 +122,6 @@ export const SnoopPage: FC<Props> = ({
               schema.pages.findIndex((p: any) => p.name === name)
               ? 'block'
               : 'hidden',
-            'space-y-6',
             className
           )}
           onSubmit={onSubmit}

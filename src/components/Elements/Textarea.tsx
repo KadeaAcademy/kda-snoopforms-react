@@ -15,6 +15,7 @@ export const Textarea: FC<TextFieldProps> = ({
   rows,
   required,
   defaultValue,
+  error,
 }) => {
   const { setSubmission } = useContext(SubmissionContext);
   const pageName = useContext(PageContext);
@@ -42,13 +43,14 @@ export const Textarea: FC<TextFieldProps> = ({
           rows={rows}
           placeholder={placeholder}
           className={classNamesConcat(
-            'block w-full border border-gray-300 rounded-md shadow-sm focus:ring-slate-500 focus:border-slate-500 sm:text-sm',
+            `block w-full border border-${
+              error ? 'red' : 'gray'
+            }-300 rounded-md shadow-sm focus:ring-slate-500 focus:border-slate-500 sm:text-sm`,
             classNames.element
           )}
           onChange={e =>
             setSubmissionValue(e.target.value, pageName, name, setSubmission)
           }
-          required={required}
         />
       </div>
       {help && (

@@ -15,6 +15,7 @@ export const Phone: FC<TextFieldProps> = ({
   placeholder,
   required,
   defaultValue,
+  error,
 }) => {
   const { setSubmission } = useContext(SubmissionContext);
   const pageName = useContext(PageContext);
@@ -30,8 +31,8 @@ export const Phone: FC<TextFieldProps> = ({
             classNames.label || 'block text-sm font-medium text-gray-700'
           }
         >
-          {required ? <span className="text-red-600">*</span> : <></>}
           {label}
+          {required ? <span className="text-red-600">*</span> : <></>}
         </label>
       )}
       <div className="relative mt-1 rounded-md shadow-sm">
@@ -49,7 +50,9 @@ export const Phone: FC<TextFieldProps> = ({
           className={classNamesConcat(
             Icon ? 'pl-10' : '',
             classNames.element ||
-              'block w-full border-gray-300 rounded-md focus:ring-slate-500 focus:border-slate-500 sm:text-sm'
+              `block w-full border-${
+                error ? 'red' : 'gray'
+              }-300 rounded-md focus:ring-slate-500 focus:border-slate-500 sm:text-sm`
           )}
           placeholder={placeholder}
           pattern="^(\+243|0)[0-9]{9}$"
@@ -59,7 +62,6 @@ export const Phone: FC<TextFieldProps> = ({
           onChange={e =>
             setSubmissionValue(e.target.value, pageName, name, setSubmission)
           }
-          required={required}
         />
       </div>
       {help && (

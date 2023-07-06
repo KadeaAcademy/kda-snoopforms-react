@@ -44,6 +44,8 @@ export interface Props {
   localOnly?: boolean;
   className?: string;
   onSubmit?: (obj: onSubmitProps) => void;
+  setFieldErrors?: any;
+  page?: any;
   children?: ReactNode;
   // error: boolean;
   setError?: (value: boolean) => void;
@@ -57,6 +59,8 @@ export const SnoopForm: FC<Props> = ({
   localOnly = false,
   className = '',
   onSubmit = (): any => {},
+  setFieldErrors,
+  page,
   children,
   setDisabled,
   setError,
@@ -68,6 +72,21 @@ export const SnoopForm: FC<Props> = ({
   const [submissionSessionId, setSubmissionSessionId] = useState('');
 
   const handleSubmit = async (pageName: string) => {
+    const pageErrors: any = {};
+    page.blocks
+      .filter((b: any) => /Question/.test(b.type))
+      .map((q: any) => {
+        const e = submission[page.id][q.id].length;
+        pageErrors[q.id] = q.data.required
+          ? e
+            ? false
+            : { message: 'Ce champs est requis' }
+          : false;
+      });
+
+    setFieldErrors(pageErrors);
+
+    if (Object.values(pageErrors).filter(f => f).length) return;
     let _submissionSessionId = submissionSessionId;
     setDisabled?.(true);
     if (!localOnly) {

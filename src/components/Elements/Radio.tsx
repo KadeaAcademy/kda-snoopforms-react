@@ -2,7 +2,7 @@
 import React, { FC, useContext } from 'react';
 import useDefaultValue from '../../hooks/useDefaultValue';
 import { setSubmissionValue } from '../../lib/elements';
-import { ClassNames } from '../../types';
+import { ClassNames, ElementErrorType } from '../../types';
 import { SubmissionContext } from '../SnoopForm/SnoopForm';
 import { PageContext } from '../SnoopPage/SnoopPage';
 
@@ -21,6 +21,7 @@ interface Props {
   classNames: ClassNames;
   required?: boolean;
   defaultValue?: string;
+  error?: ElementErrorType | false;
 }
 
 export const Radio: FC<Props> = ({
@@ -31,6 +32,7 @@ export const Radio: FC<Props> = ({
   classNames,
   defaultValue,
   required,
+  error,
 }) => {
   const { setSubmission }: any = useContext(SubmissionContext);
   const pageName = useContext(PageContext);
@@ -72,7 +74,9 @@ export const Radio: FC<Props> = ({
                   type="radio"
                   className={
                     classNames.element ||
-                    'focus:ring-slate-500 h-4 w-4 text-slate-600 border-gray-300'
+                    `focus:ring-slate-500 h-4 w-4 text-slate-600 border-${
+                      error ? 'red' : 'gray'
+                    }-300`
                   }
                   onChange={() =>
                     setSubmissionValue(
