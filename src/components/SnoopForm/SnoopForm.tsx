@@ -45,6 +45,7 @@ export interface Props {
   className?: string;
   onSubmit?: (obj: onSubmitProps) => void;
   children?: ReactNode;
+  // error: boolean;
   setError?: (value: boolean) => void;
   setDisabled?: (value: boolean) => void;
 }
@@ -59,14 +60,12 @@ export const SnoopForm: FC<Props> = ({
   children,
   setDisabled,
   setError,
+  // error = false,
 }) => {
   const [schema, setSchema] = useState<any>({ pages: [] });
   const [submission, setSubmission] = useState<any>({});
-  // const [isDisabled, setIsDisabled] = useState<boolean>(false);
   const [currentPageIdx, setCurrentPageIdx] = useState(0);
   const [submissionSessionId, setSubmissionSessionId] = useState('');
-
-  // let error: boolean = false;
 
   const handleSubmit = async (pageName: string) => {
     let _submissionSessionId = submissionSessionId;
@@ -122,6 +121,7 @@ export const SnoopForm: FC<Props> = ({
         });
       } catch (e) {
         setError?.(true);
+        
         console.error(
           `🦝 SnoopForms: Unable to send submission to snoopHub. ${e}`
         );
