@@ -22,10 +22,7 @@ export const CurrentPageContext = createContext({
   },
 });
 
-// export const SubmitButtonContext = createContext({
-//   disabled: false,
-//   setDisabled: (value: boolean) => !value,
-// });
+
 
 export const SubmitHandlerContext = createContext((pageName: string) => {
   console.log(pageName);
@@ -34,7 +31,6 @@ export const SubmitHandlerContext = createContext((pageName: string) => {
 interface onSubmitProps {
   submission: any;
   schema: any;
-  // disabled: boolean;
 }
 
 export interface Props {
@@ -47,7 +43,6 @@ export interface Props {
   setFieldErrors?: any;
   page?: any;
   children?: ReactNode;
-  // error: boolean;
   setError?: (value: boolean) => void;
   setDisabled?: (value: boolean) => void;
 }
@@ -64,7 +59,6 @@ export const SnoopForm: FC<Props> = ({
   children,
   setDisabled,
   setError,
-  // error = false,
 }) => {
   const [schema, setSchema] = useState<any>({ pages: [] });
   const [submission, setSubmission] = useState<any>({});
