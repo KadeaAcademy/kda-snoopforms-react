@@ -108,7 +108,7 @@ export const SnoopForm: FC<Props> = ({
         }
 
         // send answer to snoop platform
-        await fetch(`${protocol}://${domain}/api/forms/${formId}/eddvent`, {
+        await fetch(`${protocol}://${domain}/api/forms/${formId}/event`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
