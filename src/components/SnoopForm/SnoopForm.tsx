@@ -25,7 +25,7 @@ export const CurrentPageContext = createContext({
 
 
 export const SubmitHandlerContext = createContext((pageName: string) => {
-  console.log(pageName);
+    console.log(pageName);
 });
 
 interface onSubmitProps {
@@ -39,11 +39,10 @@ export interface Props {
   protocol?: 'http' | 'https';
   localOnly?: boolean;
   className?: string;
-  onSubmit?: (obj: onSubmitProps) => void;
+  onSubmit?: (obj: onSubmitProps, error: boolean) => void;
   setFieldErrors?: any;
   page?: any;
   children?: ReactNode;
-  setError?: (value: boolean) => void;
   setDisabled?: (value: boolean) => void;
 }
 
@@ -58,7 +57,6 @@ export const SnoopForm: FC<Props> = ({
   page,
   children,
   setDisabled,
-  setError,
 }) => {
   const [schema, setSchema] = useState<any>({ pages: [] });
   const [submission, setSubmission] = useState<any>({});
@@ -67,6 +65,7 @@ export const SnoopForm: FC<Props> = ({
 
   const handleSubmit = async (pageName: string) => {
     const pageErrors: any = {};
+    let error = false;
     page.blocks
       .filter((b: any) => /Question/.test(b.type))
       .map((q: any) => {
@@ -109,32 +108,32 @@ export const SnoopForm: FC<Props> = ({
 
         // send answer to snoop platform
         await fetch(`${protocol}://${domain}/api/forms/${formId}/event`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            events: [
-              {
-                type: 'pageSubmission',
-                data: {
-                  pageName,
-                  submissionSessionId: _submissionSessionId,
-                  submission: submission[pageName],
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              events: [
+                {
+                  type: 'pageSubmission',
+                  data: {
+                    pageName,
+                    submissionSessionId: _submissionSessionId,
+                    submission: submission[pageName],
+                  },
                 },
-              },
-              // update schema
-              // TODO: do conditionally only when requested by the snoopHub
-              { type: 'updateSchema', data: schema },
-            ],
-          }),
+                // update schema
+                // TODO: do conditionally only when requested by the snoopHub
+                { type: 'updateSchema', data: schema },
+              ],
+            }),
         }).then((response) => {
           if (!response.ok) {
             setDisabled?.(false);
-            throw new Error(`${response.status}`);
+            error = true;
+            
           }
         });
       } catch (e) {
-        setError?.(true);
-        
+        error = true;
         console.error(
           `🦝 SnoopForms: Unable to send submission to snoopHub. ${e}`
         );
@@ -149,7 +148,7 @@ export const SnoopForm: FC<Props> = ({
       (!hasThankYou && currentPageIdx === maxPageIdx) ||
       (hasThankYou && currentPageIdx === maxPageIdx - 1)
     ) {
-      return onSubmit({ submission, schema });
+      return onSubmit({ submission, schema }, error);
     }
   };
 

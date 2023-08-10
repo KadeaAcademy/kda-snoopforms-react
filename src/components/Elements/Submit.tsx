@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 import { classNamesConcat } from '../../lib/utils';
 import { ClassNames } from '../../types';
+import { ThreeDots } from 'react-loader-spinner';
 
 interface Props {
   label?: string;
@@ -18,7 +19,11 @@ export const Submit: FC<Props> = ({ classNames, label, isDisabled }) => {
       )}
       disabled={isDisabled}
     >
-      {label || 'Submit'}
+      {isDisabled ? (
+        <ThreeDots color="#1f2937" height={25} width={25} radius="10" />
+      ) : (
+        label || 'Submit'
+      )}
     </button>
   );
 };
